@@ -194,6 +194,12 @@ fn UART0_IRQ() {
     // Set an event to ensure the main thread always wakes up, even if it's in
     // the process of going to sleep.
     cortex_m::asm::sev();
+    
+    // The UART interrupt is special. It is only pended while the RX buffer is not empty.
+    // Since we read until the buffer is empty, the interrupt is cleared for us.
+    //
+    // With something like PWM we'd need to clear the IRQ ourselves with
+    // `cortex_m::peripheral::nvic::NVIC::unpend`.
 }
 
 // End of file
